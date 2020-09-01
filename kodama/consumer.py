@@ -2,6 +2,10 @@ import json
 from kafka import KafkaConsumer
 
 
+def value_deserializer(value):
+    return json.loads(value.decode('utf-8'))
+
+
 def get_consumer():
     return KafkaConsumer(
         'testt',
@@ -9,7 +13,7 @@ def get_consumer():
         auto_offset_reset='earliest',
         enable_auto_commit=True,
         group_id='my-group',
-        value_deserializer=lambda x: json.loads(x.decode('utf-8'))
+        value_deserializer=value_deserializer
     )
 
 
