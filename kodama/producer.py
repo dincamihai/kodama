@@ -1,7 +1,11 @@
 import asyncio
+import aiohttp
 from time import sleep
 from json import dumps
 from kafka import KafkaProducer
+
+
+URLS = ('http://yahoo.com',)
 
 
 def value_serializer(value):
@@ -15,11 +19,18 @@ def get_producer():
     )
 
 
+async def fetch(session, url):
+    async with session.get(url) as response:
+        return await response.text()
+
+
 async def produce(producer):
-    for e in range(1000):
-        data = {'number' : e}
-        producer.send('testt', value=data)
-        await asyncio.sleep(5)
+    loop = asyncio.get_event_loop()
+    while True:
+        for url in URLS:
+            async with aiohttp.ClientSession() as session:
+                resp = await fetch(session, url)
+            producer.send('testt', value=resp[:10])
 
 
 if __name__ == '__main__':
