@@ -1,3 +1,4 @@
+import asyncio
 from time import sleep
 from json import dumps
 from kafka import KafkaProducer
@@ -14,13 +15,13 @@ def get_producer():
     )
 
 
-def produce(producer):
+async def produce(producer):
     for e in range(1000):
         data = {'number' : e}
         producer.send('testt', value=data)
-        sleep(5)
+        await asyncio.sleep(5)
 
 
 if __name__ == '__main__':
     producer = get_producer()
-    produce(producer)
+    asyncio.run(produce(producer))
