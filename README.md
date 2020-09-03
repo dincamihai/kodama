@@ -20,4 +20,4 @@ pytest
 
 #### Notes
 
-From lack of time I did not package it properly.
+From lack of time I did not package it properly (as .deb and/or .rpm).
