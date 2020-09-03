@@ -7,6 +7,9 @@ from kafka import KafkaProducer
 from kodama import config
 
 
+logging.basicConfig(format=config.LOG_FORMAT, level=config.LOG_LEVEL)
+
+
 def value_serializer(value):
     return dumps(value).encode('utf-8')
 

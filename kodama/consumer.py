@@ -5,6 +5,9 @@ import logging
 from kodama import config
 
 
+logging.basicConfig(format=config.LOG_FORMAT, level=config.LOG_LEVEL)
+
+
 def value_deserializer(value):
     return json.loads(value.decode('utf-8'))
 
@@ -31,29 +34,32 @@ def get_db_connection():
 
 
 def insert(cur, data):
+    logging.info(f'Inserting: {data}')
     cur.execute(
         f"INSERT INTO checklog(url, response_time, return_code, regex_matches) "
         f"VALUES (\'{data['url']}\', {data['response_time']}, {data['return_code']}, {data['regex_matches']})"
     )
 
 
-def store(conn, data):
-    try:
-        insert(conn.cursor(), data)
-    except Exception as ex:
-        logging.error(ex)
-        logging.error("Unable to write to DB.")
-    else:
-        if config.DB_COMMIT:
-            conn.commit()
-        else:
-            logging.warning("Not commiting to DB.")
-
-
 def consume(consumer, db):
+    counter = 0
     for message in consumer:
-        message = message.value
-        store(db, message)
+        try:
+            insert(db.cursor(), message.value)
+            counter += 1
+        except Exception as ex:
+            logging.error("Unable to write to DB: %s", ex)
+            db.rollback()
+            logging.error("Transaction rollback.")
+            counter = 0  # reset counter
+        else:
+            if config.DB_COMMIT:
+                if counter >= config.DB_COMMIT_CHUNK:
+                    logging.info("Commiting to DB.")
+                    db.commit()
+                    counter = 0  # reset counter
+            else:
+                logging.warning("Commiting to DB is disabled.")
 
 
 if __name__ == '__main__':

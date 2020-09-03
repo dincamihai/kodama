@@ -34,14 +34,14 @@ def test_get_consumer(mock_KafkaConsumer):
 
 
 @patch('kodama.consumer.config.DB_COMMIT', False)
-def test_store(db, cur):
+def test_insert(cur):
     data = {
         'response_time': 10,
         'url': 'http://yahoo.com',
         'return_code': 200,
         'regex_matches': True
     }
-    kodama.consumer.store(db, data)
+    kodama.consumer.insert(cur, data)
     cur.execute("SELECT COUNT(*) FROM checklog;")
     (result,) = cur.fetchone()
     assert result == 1
