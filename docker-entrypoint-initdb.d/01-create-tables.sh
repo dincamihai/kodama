@@ -6,7 +6,7 @@ CREATE TABLE checklog (
     id INT GENERATED ALWAYS AS IDENTITY,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     url VARCHAR NOT NULL,
-    response_time INT NOT NULL,
+    response_time NUMERIC NOT NULL,
     return_code INT NOT NULL,
     regex_matches BOOLEAN
 )
