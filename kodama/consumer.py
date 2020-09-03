@@ -31,7 +31,10 @@ def get_db_connection():
 
 
 def insert(cur, data):
-    cur.execute(f"INSERT INTO checklog VALUES (\'{data['url']}\', {data['response_time']}, {data['response_code']}, {data['regex_matches']})")
+    cur.execute(
+        f"INSERT INTO checklog(url, response_time, return_code, regex_matches) "
+        f"VALUES (\'{data['url']}\', {data['response_time']}, {data['return_code']}, {data['regex_matches']})"
+    )
 
 
 def store(conn, data):

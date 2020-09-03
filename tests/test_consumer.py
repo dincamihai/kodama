@@ -38,7 +38,7 @@ def test_store(db, cur):
     data = {
         'response_time': 10,
         'url': 'http://yahoo.com',
-        'response_code': 200,
+        'return_code': 200,
         'regex_matches': True
     }
     kodama.consumer.store(db, data)

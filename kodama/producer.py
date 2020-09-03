@@ -1,10 +1,10 @@
 import asyncio
 import aiohttp
-from time import sleep
+import logging
+import time
 from json import dumps
 from kafka import KafkaProducer
 from kodama import config
-import logging
 
 
 def value_serializer(value):
@@ -19,8 +19,10 @@ def get_producer():
 
 
 async def fetch(session, url):
-    async with session.get(url) as response:
-        return (await response.text(), response.status)
+    start = time.time()
+    response = await session.get(url)
+    elapsed = time.time() - start
+    return (await response.text(), response.status, elapsed)
 
 
 async def produce(producer):
@@ -29,11 +31,11 @@ async def produce(producer):
         for url in config.URLS:
             logging.info(f"Checking: {url}")
             async with aiohttp.ClientSession() as session:
-                resp, status = await fetch(session, url)
+                resp, status, elapsed = await fetch(session, url)
             value={
-                'response_time': 0,
+                'response_time': elapsed,
                 'url': url,
-                'response_code': status,
+                'return_code': status,
                 'regex_matches': True
             }
             producer.send(config.KAFKA_TOPIC, value=value)

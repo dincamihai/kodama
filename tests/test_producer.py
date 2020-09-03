@@ -3,7 +3,7 @@ import pytest
 from kodama import producer
 from json import dumps
 
-from mock import patch, Mock, MagicMock
+from mock import patch, Mock, MagicMock, call
 from aiohttp.test_utils import make_mocked_request
 
 from aioresponses import aioresponses
@@ -27,13 +27,9 @@ async def test_produce():
         with aioresponses() as m:
             m.get('http://yahoo.com', status=200, body='htmlresp')
             await producer.produce(mock_producer)
-    mock_producer.call_count = 2
-    mock_producer.send.assert_called_with(
-        'testt',
-        value={
-            'response_time': 0,
-            'url': 'http://yahoo.com',
-            'response_code': 200,
-            'regex_matches': True
-        }
-    )
+    mock_producer.send.call_count = 2
+    assert mock_producer.send.mock_calls[0][1] == ('testt',)
+    assert pytest.approx(mock_producer.send.mock_calls[0][2]['value']['response_time'], 0.01)
+    assert mock_producer.send.mock_calls[0][2]['value']['url'] == 'http://yahoo.com'
+    assert mock_producer.send.mock_calls[0][2]['value']['return_code'] == 200
+    assert mock_producer.send.mock_calls[0][2]['value']['regex_matches'] is True
