@@ -3,9 +3,7 @@ import aiohttp
 from time import sleep
 from json import dumps
 from kafka import KafkaProducer
-
-
-URLS = ('http://yahoo.com',)
+from kodama import config
 
 
 def value_serializer(value):
@@ -21,16 +19,22 @@ def get_producer():
 
 async def fetch(session, url):
     async with session.get(url) as response:
-        return await response.text()
+        return (await response.text(), response.status)
 
 
 async def produce(producer):
     loop = asyncio.get_event_loop()
     while True:
-        for url in URLS:
+        for url in config.URLS:
             async with aiohttp.ClientSession() as session:
-                resp = await fetch(session, url)
-            producer.send('testt', value=resp[:10])
+                resp, status = await fetch(session, url)
+            value={
+                'response_time': 0,
+                'url': url,
+                'response_code': status,
+                'regex_matches': True
+            }
+            producer.send(config.KAFKA_TOPIC, value=value)
 
 
 if __name__ == '__main__':

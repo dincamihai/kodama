@@ -28,4 +28,12 @@ async def test_produce():
             req = m.get('http://yahoo.com', status=200, body='htmlresp')
             await producer.produce(mock_producer)
     mock_producer.call_count = 2
-    mock_producer.send.assert_called_with('testt', value='htmlresp')
+    mock_producer.send.assert_called_with(
+        'testt',
+        value={
+            'response_time': 0,
+            'url': 'http://yahoo.com',
+            'response_code': 200,
+            'regex_matches': True
+        }
+    )
