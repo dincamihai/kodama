@@ -1,3 +1,4 @@
+import re
 import asyncio
 import aiohttp
 import logging
@@ -28,6 +29,10 @@ async def fetch(session, url):
     return (await response.text(), response.status, elapsed)
 
 
+def regex_matches(text):
+    return True if re.match(config.REGEX_PATTERN, text) else False
+
+
 async def produce(producer):
     loop = asyncio.get_event_loop()
     while True:
@@ -39,7 +44,7 @@ async def produce(producer):
                 'response_time': elapsed,
                 'url': url,
                 'return_code': status,
-                'regex_matches': True  # placeholder for the real regex checking
+                'regex_matches': regex_matches(resp)
             }
             producer.send(config.KAFKA_TOPIC, value=value)
 

@@ -12,3 +12,4 @@ KAFKA_TOPIC = 'testt'
 URLS = ('http://yahoo.com',)
 LOG_FORMAT = '%(asctime)-15s - %(message)s'
 LOG_LEVEL = logging.INFO
+REGEX_PATTERN = r".*"
