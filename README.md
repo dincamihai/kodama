@@ -21,3 +21,5 @@ pytest
 #### Notes
 
 From lack of time I did not package it properly (as .deb and/or .rpm).
+
+Most of the docker-compose file is borrowed from here: https://github.com/confluentinc/cp-all-in-one
