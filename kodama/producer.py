@@ -39,7 +39,7 @@ async def produce(producer):
                 'response_time': elapsed,
                 'url': url,
                 'return_code': status,
-                'regex_matches': True
+                'regex_matches': True  # placeholder for the real regex checking
             }
             producer.send(config.KAFKA_TOPIC, value=value)
 
