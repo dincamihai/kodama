@@ -25,7 +25,7 @@ async def test_produce():
     mock_producer.send.side_effect = [None, Exception]
     with pytest.raises(Exception):
         with aioresponses() as m:
-            req = m.get('http://yahoo.com', status=200, body='htmlresp')
+            m.get('http://yahoo.com', status=200, body='htmlresp')
             await producer.produce(mock_producer)
     mock_producer.call_count = 2
     mock_producer.send.assert_called_with(

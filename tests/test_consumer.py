@@ -33,6 +33,7 @@ def test_get_consumer(mock_KafkaConsumer):
     )
 
 
+@patch('kodama.consumer.config.DB_COMMIT', False)
 def test_store(db, cur):
     data = {
         'response_time': 10,

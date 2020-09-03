@@ -4,6 +4,7 @@ from time import sleep
 from json import dumps
 from kafka import KafkaProducer
 from kodama import config
+import logging
 
 
 def value_serializer(value):
@@ -26,6 +27,7 @@ async def produce(producer):
     loop = asyncio.get_event_loop()
     while True:
         for url in config.URLS:
+            logging.info(f"Checking: {url}")
             async with aiohttp.ClientSession() as session:
                 resp, status = await fetch(session, url)
             value={
