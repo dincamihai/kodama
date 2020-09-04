@@ -12,7 +12,7 @@ Url:            https://github.com/dincamihai/kodama/archive/master.tar.gz
 Source:         https://github.com/dincamihai/kodama/archive/master.tar.gz
 BuildArch:      noarch
 BuildRequires:  %{python_module devel}
-BuildRequires:  setuptools
+BuildRequires:  python-setuptools
 BuildRequires:  python-rpm-macros
 BuildRoot:      %{_tmppath}/%{name}-master
 
