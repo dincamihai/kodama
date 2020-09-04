@@ -7,8 +7,8 @@ The project uses kafka and postgres running in containers but `config.py` can be
 pip install -r requirements-dev.txt
 mkdir postgres/data
 docker-compose up -d
-python kodama/producer.py
-python kodama/consumer.py
+producer.py
+consumer.py
 psql -h localhost -U kodama kodama -c "SELECT * FROM checklog;"
 ```
 
