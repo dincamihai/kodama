@@ -20,6 +20,6 @@ pytest
 
 #### Notes
 
-From lack of time I did not package it properly (as .deb and/or .rpm).
+The OS distros packages should build here: https://build.opensuse.org/package/show/home:mihai.dinca/kodama [currently not building]
 
 Most of the docker-compose file is borrowed from here: https://github.com/confluentinc/cp-all-in-one
